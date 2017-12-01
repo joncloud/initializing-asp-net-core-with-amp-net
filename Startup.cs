@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ namespace initializing_asp_net_core_with_amp_net
             string connectionString = "Data Source=application-db-context.db";
             services.AddDbContextPool<ApplicationDbContext>(options => options.UseSqlite(connectionString));
             services.AddMvc();
+            services.AddWarmUp().AddScoped<IWarmUp, EntityFrameworkWarmUp>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,6 +39,7 @@ namespace initializing_asp_net_core_with_amp_net
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseWarmUp();
             app.UseMvc();
         }
     }
